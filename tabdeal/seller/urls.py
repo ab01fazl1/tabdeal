@@ -1,7 +1,16 @@
 from django.urls import path
-from tabdeal.tabdeal.seller import views
+from .views import TransactionView, AccountView
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
+
+router = DefaultRouter()
+router.register(r'transactions', TransactionView)
+router.register(r'accounts', AccountView)
+
+urlpatterns = router.urls
+
+# urlpatterns = [
+
     # create user -> post seller
     # get user -> get seller
 
@@ -10,4 +19,4 @@ urlpatterns = [
     
     # charging -> post sellers/charge
     # transactions history -> get sellers/me/transactions
-]
+# ]

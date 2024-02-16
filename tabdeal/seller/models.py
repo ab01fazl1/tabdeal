@@ -6,7 +6,7 @@ from django.db import models
 class Account(models.Model):
 
     balance = models.IntegerField(default=0)
-    phone_number = models.CharField(max_length=11)
+    phone_number = models.CharField(max_length=11, unique=True)
     
     def __str__(self):
          return f'user_id: {self.id},balance: {self.balance}'    
@@ -14,27 +14,22 @@ class Account(models.Model):
 
 class Transaction(models.Model):
 
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='account')
-    to_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='to_account')
+    from_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='outgoing_transactions')
+    to_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='ingoing_transactions')
     amount = models.IntegerField()
 
 
 # singleton model to create one Bank instance
-class SingletonModel(models.Model):
+# class Bank(Account):
 
-    class Meta:
-        abstract = True
+#     class Meta:
+#         abstract = True
     
-    def save(self, *args, **kwargs):
-        self.pk = 1
-        super(SingletonModel, self).save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         self.pk = 1
+#         super(Bank, self).save(*args, **kwargs)
 
-    @classmethod
-    def load(cls):
-            obj, created = cls.objects.get_or_create(pk=1)
-            return obj
-    
-# this is like money bank or storge or khazane 
-class Bank(SingletonModel, Account):
-    
-    balance = models.IntegerField(default=1000000)
+#     @classmethod
+#     def load(cls):
+#             obj, created = cls.objects.get_or_create(pk=1)
+#             return obj

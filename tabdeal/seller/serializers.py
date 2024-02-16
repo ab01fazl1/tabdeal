@@ -9,7 +9,7 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TransactionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Transaction
-        fields = '__all__'
+class TransactionSerializer(serializers.Serializer):
+    from_account_id = serializers.IntegerField()
+    to_account_phone_number = serializers.CharField(max_length=100)
+    amount = serializers.IntegerField()

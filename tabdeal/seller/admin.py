@@ -8,16 +8,15 @@ class AccountAdmin(admin.ModelAdmin):
         'id',
         'balance',
     )
-    search_fields = ('id', 'currency',)
-
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'account',
+        'from_account',
         'to_account',
         'amount',
     )
 
 
-admin.site.register(Account, AccountAdmin, Transaction, TransactionAdmin)
+admin.site.register(Account, AccountAdmin)
+admin.site.register(Transaction, TransactionAdmin)

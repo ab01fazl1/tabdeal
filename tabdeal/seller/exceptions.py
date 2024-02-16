@@ -7,7 +7,7 @@ class InvalidAccounts(APIException):
     default_detail = "Invalid accounts"
     default_code = 'invalid_accounts'
 
-
+# :D
 class YouAreBadBakhtError(APIException):
 
     status_code = 400
