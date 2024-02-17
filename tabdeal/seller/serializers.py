@@ -12,4 +12,5 @@ class AccountSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.Serializer):
     from_account_id = serializers.IntegerField()
     to_account_phone_number = serializers.CharField(max_length=100)
-    amount = serializers.IntegerField()
+    # now we avoid getting negative amounts
+    amount = serializers.IntegerField(min_value=0, required=True)

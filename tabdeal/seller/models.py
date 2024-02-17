@@ -5,7 +5,7 @@ from django.db import models
 # and we do not allow a transaction between unregistered phone numbers
 class Account(models.Model):
 
-    balance = models.IntegerField(default=0)
+    balance = models.PositiveIntegerField(default=0)
     phone_number = models.CharField(max_length=11, unique=True)
     
     def __str__(self):
@@ -16,7 +16,7 @@ class Transaction(models.Model):
 
     from_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='outgoing_transactions')
     to_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='ingoing_transactions')
-    amount = models.IntegerField()
+    amount = models.PositiveIntegerField()
 
 
 # singleton model to create one Bank instance
