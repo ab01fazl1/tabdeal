@@ -12,12 +12,6 @@ class FunctionalityTestCase(TestCase):
         self.acc1 = Account.objects.create()
         self.acc2 = Account.objects.create()
 
-    # def test(self):
-    #     client = APIClient()
-    #     cli = client.post(self.charge_url, {'amount': 110, 'to_account_id': self.acc1.id,}, format='json')
-    #     self.assertEqual(cli.status_code, 201)
-
-
     def test(self):
         client = APIClient()
 
