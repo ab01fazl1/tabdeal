@@ -1,33 +1,34 @@
 from django.db.transaction import atomic
 from .exceptions import InsufficientFunds, InvalidAccounts
 from .models import Account, Transaction, Bank
+from django.db.models import F
+
 
 def create_transaction(data):
-        amount = data['amount']
-        # create an atomic transaction
-        with atomic():
+    amount = data['amount']
+    # create an atomic transaction
+    with atomic():
 
-            # get accounts and use select_for_update to lock them for the duration of the transaction
-            try:
-                from_account = Account.objects.select_for_update().get(id=data['from_account_id'])
-                phone_number = data['phone_number']
-            except Account.DoesNotExist:
-                raise InvalidAccounts
-            
-            # create a transaction and check if balance will be more than 0 after the transaction
-            if from_account.balance < amount:
-                raise InsufficientFunds
-            else:
-                Transaction.objects.create(
-                    from_account=from_account,
-                    amount=amount,
-                    phone_number=phone_number,
-                )
-            
-            # recalculate the balance
-            from_account.balance -= amount
-            from_account.save()
-
+        # get accounts and use select_for_update to lock them for the duration of the transaction
+        try:
+            from_account_queryset = Account.objects.select_for_update().filter(id=data['from_account_id'])
+            phone_number = data['phone_number']
+        except Account.DoesNotExist:
+            raise InvalidAccounts
+        
+        # create a transaction and check if balance will be more than 0 after the transaction
+        from_account_obj = from_account_queryset[0]
+        if from_account_obj.balance < amount:
+            raise InsufficientFunds
+        else:
+            Transaction.objects.create(
+                from_account=from_account_obj,
+                amount=amount,
+                phone_number=phone_number,
+            )
+        
+        # recalculate the balance
+        from_account_queryset.update(balance=F('balance') - amount)
 
 def create_charge_transaction(data):
     
